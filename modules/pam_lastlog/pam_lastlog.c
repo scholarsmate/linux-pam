@@ -280,10 +280,11 @@ last_login_read(pam_handle_t *pamh, int announce, int last_fd, uid_t uid, time_t
 
     while (fcntl(last_fd, F_SETLK, &last_lock) < 0) {
         if (0 == --lock_retries) {
+            /* read lock failed, proceed anyway to avoid possible DoS */
             D(("locking %s failed", _PATH_LASTLOG));
-            pam_syslog(pamh, LOG_ERR,
-                       "file %s is locked/read", _PATH_LASTLOG);
-            return PAM_SERVICE_ERR;
+            pam_syslog(pamh, LOG_INFO,
+                       "file %s is locked/read, proceeding anyway",
+                       _PATH_LASTLOG);
         }
         D(("locking %s failed..(waiting a little)", _PATH_LASTLOG));
         pam_syslog(pamh, LOG_INFO,
