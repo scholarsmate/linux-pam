@@ -285,6 +285,7 @@ last_login_read(pam_handle_t *pamh, int announce, int last_fd, uid_t uid, time_t
             pam_syslog(pamh, LOG_INFO,
                        "file %s is locked/read, proceeding anyway",
                        _PATH_LASTLOG);
+            break;
         }
         D(("locking %s failed..(waiting a little)", _PATH_LASTLOG));
         pam_syslog(pamh, LOG_INFO,
